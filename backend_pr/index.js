@@ -30,20 +30,15 @@ connectDB();
 app.use(express.json());
 app.use(express.urlencoded({extended:false}));
 
-async function getApproversAndRequesters() {
+async function getApproversAndRequesters(checker) {
     try {
-      const users = await User.find({
-        $or: [
-          { roles: 'approver' },
-          { roles: { $all: ['approver', 'requester'] } }
-        ]
-      });
-  
-      const approversArray = users.map(user => ({
-        approverId: user._id,
-        status: 'Pending',
-        comments: ''
-      }));
+      const approversArray = checker.map((input)=>{
+        if(input!==false)({
+            approverId:input,
+            status:'Pending',
+            comments:'',
+        })
+      })
   
       return approversArray;
     } catch (error) {
@@ -62,33 +57,12 @@ app.get('/profile',(req,res)=>{
 })
 
 app.post('/register',async (req,res)=>{
-    const {username,email,password,role}=req.body;
+    const {username,email,password}=req.body;
     try{
         const salt=await bcrypt.genSalt(saltRound);
         const hshpwd=await bcrypt.hash(`${password}`,`${salt}`);
-        const userDoc=await User.create({username,email,password:hshpwd,roles:role});
+        const userDoc=await User.create({username,email,password:hshpwd});
         res.json(userDoc);
-
-        try {
-            const pullRequests = await PullRequest.find();
-        
-        for (const pullRequest of pullRequests) {
-            if (userDoc.roles.includes('approver')) {
-                const existingApprover = pullRequest.approvers.find(approver => approver.approverId.equals(userDoc._id));
-    
-                if (!existingApprover) {
-                pullRequest.approvers.push({
-                    approverId: userDoc._id,
-                    status: 'Pending',
-                    comments: ''
-                });
-                await pullRequest.save();
-                }
-            }
-            }
-        } catch (error) {
-            throw error;
-        }
     }catch(err){
         console.log(err);
         res.status(400).send(err);
@@ -101,9 +75,8 @@ app.post('/login',async(req,res)=>{
     if(!findUser) return res.status(400).send('NO user found');
     const passcheck=await bcrypt.compare(`${password}`,findUser.password);
     if(passcheck){
-        const check=findUser.roles.includes('approver')?'1':'2';
         const token=jwt.sign(
-            {username,id:findUser._id,check},
+            {username,id:findUser._id},
             secret,
             {}
         );
@@ -139,11 +112,13 @@ app.get('/getUsers',async(req,res)=>{
 })
 
 app.post('/pull-request',async(req,res)=>{
-    const {title,content}=req.body;
+    const {title,content,processed,checker}=req.body;
+    console.log({title,content,processed,checker});
     const {token}=req.cookies;
     jwt.verify(token,secret,{},async(err,info)=>{
         if(err) throw err;
-        const approversArray = await getApproversAndRequesters();
+        const approversArray = await getApproversAndRequesters(checker);
+        console.log(approversArray);
         if(title){
         const userDoc=await PullRequest.create({
             title,
