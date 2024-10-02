@@ -7,13 +7,13 @@ export function UserContextProvider({children}){
     const [search,setSearch]=useState('');
     const [refresh,setRefresh]=useState(false);
     const [sock,setSock]=useState(false);
-    const [popupOpen, setPopupOpen] = useState(false);
+    const [open, setOpen] = useState(false);
     return (
         <UserContext.Provider value={{
             userInfo,setUserInfo,
             search,setSearch,
             refresh,setRefresh,
-            popupOpen,setPopupOpen
+            open,setOpen
         }}>
             {children}
         </UserContext.Provider>

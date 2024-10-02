@@ -20,7 +20,7 @@ const formats = [
     'link', 'image'
 ];
 
-const EditFormat = () => {
+const EditRequest = () => {
     const [title,setTitle]=useState('');
     const [content,setContent]=useState('');
     const [redirect,setRedirect]=useState(false);
@@ -88,4 +88,4 @@ const EditFormat = () => {
   )
 }
 
-export default EditFormat
+export default EditRequest;

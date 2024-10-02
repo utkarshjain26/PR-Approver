@@ -1,48 +1,78 @@
-import Content from './Content';
-import Request from './Request';
-import Header from './Header';
-import Footer from './Footer';
-import Login from './Login';
-import Register from './Register';
-import { Route, Routes ,useHistory} from 'react-router-dom';
-import { UserContextProvider } from './UserContext';
-import NewFormat from './NewFormat';
-import CreateRequest from './CreateRequest';
-import EditFormat from './EditFormat';
-import Approved from './Approved';
-import Rejected from './Rejected';
+import {
+  createBrowserRouter,
+  Route,
+  Routes,
+  useHistory,
+} from "react-router-dom";
+import { UserContextProvider } from "./UserContext";
+import Home from "./pages/Home/Home";
+import Login from "./pages/Auth/Login";
+import SignUp from "./pages/Auth/SignUp";
+import ApprovedRequest from "./pages/Request/ApprovedRequest";
+import RejectedRequests from "./pages/Request/RejectedRequest";
+import PendingRequest from "./pages/Request/PendingRequest";
+import ViewRequest from "./pages/Request/ViewRequest";
+import CreateRequest from "./pages/Request/CreateRequest";
+import EditRequest from "./pages/Request/EditRequest";
+import Footer from "./shared/Footer";
+import Header from "./shared/Header";
+import HomeLogin from "./pages/Home/HomeLogin";
+import NotificationPage from "./shared/NotificationPage";
+import { useUserStore } from "./store/UserStore";
 
-function App() {
-  return (
-    <UserContextProvider>
-      <div className="App">
-        <Header/>
+// const userInfo = useUserStore((state) => state.user);
 
-        <Routes>
-          <Route path='/' element={<Content/>}>
-          </Route>
-          <Route path='/login' element={<Login/>}>
-          </Route>
-          <Route path='/register' element={<Register/>}>
-          </Route>
-          <Route path='/pull-request' element={<Request/>}>
-          </Route>
-          <Route path='/pull-request-approved' element={<Approved/>}>
-          </Route>
-          <Route path='/pull-request-rejected' element={<Rejected/>}>
-          </Route>
-          <Route path='/pull-request/:id' element={<NewFormat />}>
-          </Route>
-          <Route path='/newPullRequest' element={<CreateRequest />}>
-          </Route>
-          <Route path='/edit-pull-request/:id' element={<EditFormat />}>
-          </Route>
-        </Routes>
+const AppRouter = createBrowserRouter([
+  {
+    path: "/",
+    element: <Header />,
+    children: [
+      {
+        path:"",
+        element:<Home />,
+      },
+      {
+        path: "login",
+        element: <Login />,
+      },
+      {
+        path: "register",
+        element: <SignUp />,
+      },
+      {
+        path: "requests",
+        element: <HomeLogin />,
+      },
+      {
+        path: "pull-request",
+        element: <PendingRequest />,
+      },
+      {
+        path: "pull-request-approved",
+        element: <ApprovedRequest />,
+      },
+      {
+        path: "pull-request-rejected",
+        element: <RejectedRequests />,
+      },
+      {
+        path: "pull-request/:id",
+        element: <ViewRequest />,
+      },
+      {
+        path: "edit-pull-request/:id",
+        element: <RejectedRequests />,
+      },
+      {
+        path: "newPullRequest",
+        element: <CreateRequest />,
+      },
+      {
+        path: "notifications",
+        element: <NotificationPage />,
+      },
+    ],
+  },
+]);
 
-        <Footer/>
-      </div>
-    </UserContextProvider>
-  );
-}
-
-export default App;
+export default AppRouter;

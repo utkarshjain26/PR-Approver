@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom"
 
-const Format = ({_id,title,requesterId,createdAt,comments}) => {
+const PullRequest = ({_id,title,requesterId,createdAt,comments}) => {
   return (
       <div class="pull-request">
           <div class="pull-request-header">
@@ -16,4 +16,4 @@ const Format = ({_id,title,requesterId,createdAt,comments}) => {
   )
 }
 
-export default Format
+export default PullRequest;
