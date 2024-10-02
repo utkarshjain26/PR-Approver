@@ -7,7 +7,7 @@ Frontend:
 4. Tech Stack: React, MUI, Zustand, Tanstack Query, Socket.io, React Router(latest ways), 
    
 Backend:
-1. Notification System: For both online and offline users. If users are online they will recieve real time notification and if they are offline they will get the notification in their notification as they come back online.
+1. Notification System: For both online and offline users. If users are online they will recieve real time notification and if they are offline they will get the notification in their notification panel as they come back online.
 2. JWT local authentication system.
 3. Implemented sockets and middleware in structured manner.
 4. Good clean code with controllers, routes for all different actions (like for users, request, notifications, etc.).
